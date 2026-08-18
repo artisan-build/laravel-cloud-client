@@ -1,0 +1,57 @@
+{
+    "data": [
+        {
+            "id": "app-01k7app000000000000000001",
+            "type": "applications",
+            "attributes": {
+                "name": "My Application",
+                "slug": "my-application",
+                "region": "us-east-1",
+                "root_directory": null,
+                "slack_channel": null,
+                "avatar_url": "https://cloud.laravel.com/avatars/app-01k7app000000000000000001.png",
+                "created_at": "2026-01-15T10:00:00Z",
+                "repository": {
+                    "full_name": "user/repo",
+                    "default_branch": "main"
+                }
+            },
+            "relationships": {
+                "repository": {
+                    "data": {
+                        "id": "repo-01k7repo0000000000000001",
+                        "type": "repositories"
+                    }
+                }
+            }
+        },
+        {
+            "id": "app-01k7app000000000000000002",
+            "type": "applications",
+            "attributes": {
+                "name": "Another App",
+                "slug": "another-app",
+                "region": "us-east-1",
+                "root_directory": "app",
+                "slack_channel": "#deployments",
+                "avatar_url": "https://cloud.laravel.com/avatars/app-01k7app000000000000000002.png",
+                "created_at": "2026-01-16T14:30:00Z",
+                "repository": {
+                    "full_name": "user/another-repo",
+                    "default_branch": "develop"
+                }
+            },
+            "relationships": {
+                "repository": {
+                    "data": {
+                        "id": "repo-01k7repo0000000000000002",
+                        "type": "repositories"
+                    }
+                }
+            }
+        }
+    ],
+    "meta": {
+        "total": 2
+    }
+}

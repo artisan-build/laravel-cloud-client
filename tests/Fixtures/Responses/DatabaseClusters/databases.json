@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "id": "schema-01k7schema0000000000001",
+            "type": "databaseSchemas",
+            "attributes": {
+                "name": "laravel",
+                "status": "available",
+                "created_at": "2026-01-15T10:05:00Z"
+            },
+            "relationships": {
+                "database": {
+                    "data": {
+                        "id": "db-01k7db000000000000000001",
+                        "type": "databases"
+                    }
+                },
+                "environments": {
+                    "data": []
+                }
+            }
+        }
+    ]
+}

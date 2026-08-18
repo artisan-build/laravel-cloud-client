@@ -1,0 +1,129 @@
+{
+    "data": [
+        {
+            "id": "env-01k7env000000000000000001",
+            "type": "environments",
+            "attributes": {
+                "name": "production",
+                "slug": "production",
+                "status": "running",
+                "created_from_automation": false,
+                "vanity_domain": "production.example.com",
+                "php_major_version": "8.4",
+                "build_command": "composer install --no-dev",
+                "node_version": "22",
+                "deploy_command": "php artisan migrate --force",
+                "uses_octane": false,
+                "uses_hibernation": false,
+                "hibernation_wake_up_interval": null,
+                "uses_push_to_deploy": true,
+                "uses_deploy_hook": true,
+                "environment_variables": [],
+                "network_settings": {
+                    "cache": {
+                        "strategy": "standard"
+                    },
+                    "response_headers": {
+                        "frame": "deny",
+                        "content_type": "nosniff",
+                        "hsts": {
+                            "max_age": 31536000,
+                            "include_subdomains": true,
+                            "preload": false
+                        }
+                    },
+                    "firewall": {
+                        "bot_categories": [],
+                        "rate_limit": {
+                            "level": "throttle",
+                            "per_minute": 100,
+                            "4xx": true,
+                            "429": true
+                        },
+                        "under_attack_mode_started_at": "",
+                        "block_path": false
+                    },
+                    "content_converter": false
+                },
+                "created_at": "2026-01-15T10:00:00Z"
+            },
+            "relationships": {
+                "application": {
+                    "data": {
+                        "id": "app-01k7app000000000000000001",
+                        "type": "applications"
+                    }
+                }
+            },
+            "links": {
+                "self": {
+                    "href": "https://cloud.laravel.com/api/environments/env-01k7env000000000000000001"
+                }
+            }
+        },
+        {
+            "id": "env-01k7env000000000000000002",
+            "type": "environments",
+            "attributes": {
+                "name": "staging",
+                "slug": "staging",
+                "status": "hibernating",
+                "created_from_automation": false,
+                "vanity_domain": "staging.example.com",
+                "php_major_version": "8.4",
+                "build_command": null,
+                "node_version": "22",
+                "deploy_command": null,
+                "uses_octane": false,
+                "uses_hibernation": true,
+                "hibernation_wake_up_interval": 60,
+                "uses_push_to_deploy": false,
+                "uses_deploy_hook": false,
+                "environment_variables": [],
+                "network_settings": {
+                    "cache": {
+                        "strategy": "standard"
+                    },
+                    "response_headers": {
+                        "frame": "deny",
+                        "content_type": "nosniff",
+                        "hsts": {
+                            "max_age": 31536000,
+                            "include_subdomains": true,
+                            "preload": false
+                        }
+                    },
+                    "firewall": {
+                        "bot_categories": [],
+                        "rate_limit": {
+                            "level": "throttle",
+                            "per_minute": 100,
+                            "4xx": true,
+                            "429": true
+                        },
+                        "under_attack_mode_started_at": "",
+                        "block_path": false
+                    },
+                    "content_converter": false
+                },
+                "created_at": "2026-01-15T10:30:00Z"
+            },
+            "relationships": {
+                "application": {
+                    "data": {
+                        "id": "app-01k7app000000000000000001",
+                        "type": "applications"
+                    }
+                }
+            },
+            "links": {
+                "self": {
+                    "href": "https://cloud.laravel.com/api/environments/env-01k7env000000000000000002"
+                }
+            }
+        }
+    ],
+    "meta": {
+        "total": 2
+    }
+}

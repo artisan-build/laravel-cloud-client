@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ArtisanBuild\LaravelCloudClient\Enums;
+
+enum InstanceSize: string
+{
+    case Flex512Mb = 'flex-512mb';
+    case Flex1Gb = 'flex-1gb';
+    case Flex2Gb = 'flex-2gb';
+    case FlexC1Vcpu256Mb = 'flex.c-1vcpu-256mb';
+    case FlexG1Vcpu512Mb = 'flex.g-1vcpu-512mb';
+    case FlexM1Vcpu1Gb = 'flex.m-1vcpu-1gb';
+    case FlexC2Vcpu512Mb = 'flex.c-2vcpu-512mb';
+    case FlexG2Vcpu1Gb = 'flex.g-2vcpu-1gb';
+    case FlexM2Vcpu2Gb = 'flex.m-2vcpu-2gb';
+    case FlexC4Vcpu1Gb = 'flex.c-4vcpu-1gb';
+    case FlexG4Vcpu2Gb = 'flex.g-4vcpu-2gb';
+    case FlexM4Vcpu4Gb = 'flex.m-4vcpu-4gb';
+    case FlexC8Vcpu2Gb = 'flex.c-8vcpu-2gb';
+    case FlexG8Vcpu4Gb = 'flex.g-8vcpu-4gb';
+    case FlexM8Vcpu8Gb = 'flex.m-8vcpu-8gb';
+    case ProC1Vcpu1Gb = 'pro.c-1vcpu-1gb';
+    case ProG1Vcpu2Gb = 'pro.g-1vcpu-2gb';
+    case ProM1Vcpu4Gb = 'pro.m-1vcpu-4gb';
+    case ProC2Vcpu2Gb = 'pro.c-2vcpu-2gb';
+    case ProG2Vcpu4Gb = 'pro.g-2vcpu-4gb';
+    case ProM2Vcpu8Gb = 'pro.m-2vcpu-8gb';
+    case ProC4Vcpu4Gb = 'pro.c-4vcpu-4gb';
+    case ProG4Vcpu8Gb = 'pro.g-4vcpu-8gb';
+    case ProM4Vcpu16Gb = 'pro.m-4vcpu-16gb';
+    case ProC8Vcpu8Gb = 'pro.c-8vcpu-8gb';
+    case ProG8Vcpu16Gb = 'pro.g-8vcpu-16gb';
+    case ProM8Vcpu32Gb = 'pro.m-8vcpu-32gb';
+    case DedicatedC1Vcpu2Gb = 'dedicated.c-1vcpu-2gb';
+    case DedicatedG1Vcpu4Gb = 'dedicated.g-1vcpu-4gb';
+    case DedicatedM1Vcpu8Gb = 'dedicated.m-1vcpu-8gb';
+    case DedicatedC2Vcpu4Gb = 'dedicated.c-2vcpu-4gb';
+    case DedicatedG2Vcpu8Gb = 'dedicated.g-2vcpu-8gb';
+    case DedicatedM2Vcpu16Gb = 'dedicated.m-2vcpu-16gb';
+    case DedicatedC4Vcpu8Gb = 'dedicated.c-4vcpu-8gb';
+    case DedicatedG4Vcpu16Gb = 'dedicated.g-4vcpu-16gb';
+    case DedicatedM4Vcpu32Gb = 'dedicated.m-4vcpu-32gb';
+    case DedicatedC8Vcpu16Gb = 'dedicated.c-8vcpu-16gb';
+    case DedicatedG8Vcpu32Gb = 'dedicated.g-8vcpu-32gb';
+    case DedicatedM8Vcpu64Gb = 'dedicated.m-8vcpu-64gb';
+    case MqPro256Mb = 'mq-pro-256mb';
+    case MqPro512Mb = 'mq-pro-512mb';
+    case MqPro1Gb = 'mq-pro-1gb';
+    case MqPro2Gb = 'mq-pro-2gb';
+    case MqPro4Gb = 'mq-pro-4gb';
+    case MqPro8Gb = 'mq-pro-8gb';
+    case MqDedicated256Mb = 'mq-dedicated-256mb';
+    case MqDedicated512Mb = 'mq-dedicated-512mb';
+    case MqDedicated1Gb = 'mq-dedicated-1gb';
+    case MqDedicated2Gb = 'mq-dedicated-2gb';
+    case MqDedicated4Gb = 'mq-dedicated-4gb';
+    case MqDedicated8Gb = 'mq-dedicated-8gb';
+    case MqDedicated16Gb = 'mq-dedicated-16gb';
+    case MqFlex256Mb = 'mq.flex.256mb';
+    case MqFlex512Mb = 'mq.flex.512mb';
+    case MqFlex1Gb = 'mq.flex.1gb';
+    case MqFlex2Gb = 'mq.flex.2gb';
+    case MqProDot256Mb = 'mq.pro.256mb';
+    case MqProDot512Mb = 'mq.pro.512mb';
+    case MqProDot1Gb = 'mq.pro.1gb';
+    case MqProDot2Gb = 'mq.pro.2gb';
+    case MqProDot4Gb = 'mq.pro.4gb';
+    case MqProDot8Gb = 'mq.pro.8gb';
+    case MqDedicatedFlex256Mb = 'mq.dedicated.flex.256mb';
+    case MqDedicatedFlex512Mb = 'mq.dedicated.flex.512mb';
+    case MqDedicatedFlex1Gb = 'mq.dedicated.flex.1gb';
+    case MqDedicatedFlex2Gb = 'mq.dedicated.flex.2gb';
+    case MqDedicatedPro256Mb = 'mq.dedicated.pro.256mb';
+    case MqDedicatedPro512Mb = 'mq.dedicated.pro.512mb';
+    case MqDedicatedPro1Gb = 'mq.dedicated.pro.1gb';
+    case MqDedicatedPro2Gb = 'mq.dedicated.pro.2gb';
+    case MqDedicatedPro4Gb = 'mq.dedicated.pro.4gb';
+    case MqDedicatedPro8Gb = 'mq.dedicated.pro.8gb';
+    case MqDedicatedPro16Gb = 'mq.dedicated.pro.16gb';
+}

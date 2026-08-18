@@ -1,0 +1,28 @@
+{
+    "data": {
+        "id": "bucket-01k7bucket0000000000001",
+        "type": "filesystems",
+        "attributes": {
+            "name": "app-uploads",
+            "type": "cloudflare_r2",
+            "status": "available",
+            "visibility": "private",
+            "jurisdiction": "default",
+            "endpoint": "https://bucket.r2.cloudflarestorage.com",
+            "url": null,
+            "allowed_origins": null,
+            "cors_settings": null,
+            "created_at": "2026-01-15T10:00:00Z"
+        },
+        "relationships": {
+            "keys": {
+                "data": [
+                    {
+                        "id": "key-01k7key000000000000000001",
+                        "type": "filesystemKeys"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "data": [
+        {
+            "id": "key-01k7key000000000000000001",
+            "type": "filesystemKeys",
+            "attributes": {
+                "name": "primary-key",
+                "permission": "read_write",
+                "access_key_id": "access-key-id",
+                "access_key_secret": null,
+                "created_at": "2026-01-15T10:00:00Z"
+            },
+            "relationships": {
+                "filesystem": {
+                    "data": {
+                        "id": "bucket-01k7bucket0000000000001",
+                        "type": "filesystems"
+                    }
+                }
+            }
+        }
+    ],
+    "links": {
+        "first": "https://cloud.laravel.com/api/buckets/bucket-01k7bucket0000000000001/keys?page=1",
+        "last": "https://cloud.laravel.com/api/buckets/bucket-01k7bucket0000000000001/keys?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "links": [],
+        "path": "https://cloud.laravel.com/api/buckets/bucket-01k7bucket0000000000001/keys",
+        "per_page": 25,
+        "to": 1,
+        "total": 1
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "data": [
+        {
+            "id": "db-01k7db000000000000000001",
+            "type": "databases",
+            "attributes": {
+                "name": "main-db",
+                "type": "laravel_mysql_84",
+                "status": "available",
+                "region": "us-east-1",
+                "created_at": "2026-01-15T10:00:00Z",
+                "config": {
+                    "size": "mysql-flex-512mb",
+                    "storage": 5,
+                    "is_public": false,
+                    "uses_scheduled_snapshots": true,
+                    "retention_days": 7,
+                    "maintenance_window": null,
+                    "suspend_seconds": 0
+                },
+                "connection": {
+                    "hostname": "main-db.internal",
+                    "port": 3306,
+                    "protocol": "mysql",
+                    "driver": "mysql",
+                    "username": "laravel",
+                    "password": "secret"
+                }
+            },
+            "relationships": {
+                "schemas": {
+                    "data": []
+                },
+                "databases": {
+                    "data": []
+                }
+            }
+        }
+    ],
+    "links": {
+        "first": "https://cloud.laravel.com/api/databases/clusters?page=1",
+        "last": "https://cloud.laravel.com/api/databases/clusters?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "links": [],
+        "path": "https://cloud.laravel.com/api/databases/clusters",
+        "per_page": 25,
+        "to": 1,
+        "total": 1
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "data": {
+        "id": "bgp-01k7bgp000000000000000001",
+        "type": "background_processes",
+        "attributes": {
+            "type": "custom",
+            "processes": 2,
+            "command": "php artisan queue:work",
+            "config": [],
+            "strategy_type": "none",
+            "strategy_threshold": null,
+            "created_at": "2026-01-15T10:00:00Z"
+        },
+        "relationships": {
+            "instance": {
+                "data": {
+                    "id": "ins-01k7ins000000000000000001",
+                    "type": "instances"
+                }
+            }
+        }
+    }
+}

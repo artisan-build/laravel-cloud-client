@@ -1,0 +1,19 @@
+{
+    "data": [
+        {
+            "key": "APP_NAME",
+            "value": "My Application"
+        },
+        {
+            "key": "APP_ENV",
+            "value": "production"
+        },
+        {
+            "key": "APP_DEBUG",
+            "value": "false"
+        }
+    ],
+    "meta": {
+        "total": 3
+    }
+}

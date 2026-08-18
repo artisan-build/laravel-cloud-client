@@ -1,0 +1,41 @@
+{
+    "data": {
+        "id": "dep-01k7dep000000000000000001",
+        "type": "deployments",
+        "attributes": {
+            "status": "deployment.succeeded",
+            "branch_name": "main",
+            "commit_hash": "abc123def",
+            "commit_message": "Deploy application",
+            "commit_author": "Taylor Otwell",
+            "failure_reason": null,
+            "php_major_version": "8.4",
+            "build_command": "composer install --no-dev",
+            "node_version": "22",
+            "uses_octane": false,
+            "uses_hibernation": false,
+            "hibernation_wake_up_interval": null,
+            "started_at": "2026-01-20T10:00:00Z",
+            "finished_at": "2026-01-20T10:05:00Z"
+        },
+        "relationships": {
+            "environment": {
+                "data": {
+                    "id": "env-01k7env000000000000000001",
+                    "type": "environments"
+                }
+            },
+            "initiator": {
+                "data": {
+                    "id": "usr-01k7usr000000000000000001",
+                    "type": "users"
+                }
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://cloud.laravel.com/api/deployments/dep-01k7dep000000000000000001"
+            }
+        }
+    }
+}

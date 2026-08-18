@@ -1,0 +1,38 @@
+{
+    "data": {
+        "id": "dep-01k7dep000000000000000003",
+        "type": "deployments",
+        "attributes": {
+            "status": "pending",
+            "branch_name": "main",
+            "commit_hash": "ghi789jkl",
+            "commit_message": "Manual deployment",
+            "commit_author": null,
+            "failure_reason": null,
+            "php_major_version": "8.4",
+            "build_command": null,
+            "node_version": "22",
+            "uses_octane": false,
+            "uses_hibernation": false,
+            "hibernation_wake_up_interval": null,
+            "started_at": null,
+            "finished_at": null
+        },
+        "relationships": {
+            "environment": {
+                "data": {
+                    "id": "env-01k7env000000000000000001",
+                    "type": "environments"
+                }
+            },
+            "initiator": {
+                "data": null
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://cloud.laravel.com/api/deployments/dep-01k7dep000000000000000003"
+            }
+        }
+    }
+}

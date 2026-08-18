@@ -1,0 +1,39 @@
+{
+    "data": {
+        "id": "app-01k7app000000000000000003",
+        "type": "applications",
+        "attributes": {
+            "name": "New Application",
+            "slug": "new-application",
+            "region": "us-east-1",
+            "root_directory": null,
+            "slack_channel": null,
+            "avatar_url": "https://cloud.laravel.com/avatars/app-01k7app000000000000000003.png",
+            "created_at": "2026-01-21T14:30:00Z",
+            "repository": {
+                "full_name": "user/new-repo",
+                "default_branch": "main"
+            }
+        },
+        "relationships": {
+            "repository": {
+                "data": {
+                    "id": "repo-01k7repo0000000000000003",
+                    "type": "repositories"
+                }
+            },
+            "organization": {
+                "data": null
+            },
+            "environments": {
+                "data": []
+            },
+            "deployments": {
+                "data": []
+            },
+            "defaultEnvironment": {
+                "data": null
+            }
+        }
+    }
+}

@@ -1,0 +1,5 @@
+{
+    "data": {
+        "logs": "Building application...\nInstalling dependencies...\nRunning migrations...\nOptimizing application...\nDeployment completed successfully."
+    }
+}
