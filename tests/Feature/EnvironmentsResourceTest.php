@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use ArtisanBuild\LaravelCloudClient\Enums\EnvironmentVariablesInsertMethod;
+use ArtisanBuild\LaravelCloudClient\Enums\PhpVersion;
 use ArtisanBuild\LaravelCloudClient\LaravelCloudClient;
 use ArtisanBuild\LaravelCloudClient\Requests\Environments\CreateEnvironmentVariable;
 use ArtisanBuild\LaravelCloudClient\Requests\Environments\DeleteEnvironmentVariable;
@@ -370,6 +371,84 @@ it('deletes environment variable', function () {
         expect($response->getPendingRequest()->body()?->all())->toBe([
             'keys' => ['API_KEY'],
         ]);
+
+        return true;
+    });
+});
+
+it('sets the build command without touching anything else on the environment', function () {
+    $mockClient = new MockClient([
+        MockResponse::make(
+            body: $this->getFixture('Environments/show.json'),
+            status: 200,
+        ),
+    ]);
+
+    $client = new LaravelCloudClient(apiToken: 'test-token');
+    $client->withMockClient($mockClient);
+
+    $response = $client->environments()->update(
+        environmentId: 'env-01k7env000000000000000001',
+        buildCommand: 'composer install --no-dev && php artisan matte:provision-binary',
+    );
+
+    expect($response->status())->toBe(200);
+
+    $mockClient->assertSent(function (UpdateEnvironment $request, Response $response): bool {
+        expect($request->getMethod())->toBe(Method::PATCH);
+        expect($request->resolveEndpoint())->toBe('/environments/env-01k7env000000000000000001');
+        expect($response->getPendingRequest()->body()?->all())->toBe([
+            'build_command' => 'composer install --no-dev && php artisan matte:provision-binary',
+        ]);
+
+        return true;
+    });
+});
+
+it('omits the build command entirely when it is not passed', function () {
+    // Omitted and null are DIFFERENT instructions: null clears an override and
+    // restores Cloud's own default build, so a caller that only wanted to set
+    // the PHP version must not send the field at all.
+    $mockClient = new MockClient([
+        MockResponse::make(
+            body: $this->getFixture('Environments/show.json'),
+            status: 200,
+        ),
+    ]);
+
+    $client = new LaravelCloudClient(apiToken: 'test-token');
+    $client->withMockClient($mockClient);
+
+    $client->environments()->update(
+        environmentId: 'env-01k7env000000000000000001',
+        phpVersion: PhpVersion::Php84,
+    );
+
+    $mockClient->assertSent(function (UpdateEnvironment $request, Response $response): bool {
+        expect($response->getPendingRequest()->body()?->all())->not->toHaveKey('build_command');
+
+        return true;
+    });
+});
+
+it('sends a null build command when clearing the override', function () {
+    $mockClient = new MockClient([
+        MockResponse::make(
+            body: $this->getFixture('Environments/show.json'),
+            status: 200,
+        ),
+    ]);
+
+    $client = new LaravelCloudClient(apiToken: 'test-token');
+    $client->withMockClient($mockClient);
+
+    $client->environments()->update(
+        environmentId: 'env-01k7env000000000000000001',
+        buildCommand: null,
+    );
+
+    $mockClient->assertSent(function (UpdateEnvironment $request, Response $response): bool {
+        expect($response->getPendingRequest()->body()?->all())->toBe(['build_command' => null]);
 
         return true;
     });

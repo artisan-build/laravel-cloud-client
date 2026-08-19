@@ -89,6 +89,10 @@ final class EnvironmentsResource extends Resource
      * null or an empty string detaches database/cache resources, and a string id attaches that resource.
      * Passing an empty array for filesystem keys detaches every bucket from the environment.
      *
+     * The build command follows the same semantics: omit it to leave the environment's build alone,
+     * pass a string to override Cloud's default build, or pass null (or an empty string) to clear
+     * the override and go back to that default.
+     *
      * @param  array<int, array{id: string, disk: string, is_default_disk: bool}>|null  $filesystemKeys
      *
      * @throws ApiException
@@ -105,6 +109,7 @@ final class EnvironmentsResource extends Resource
         ?string $cacheId = self::UNSET,
         ?array $filesystemKeys = null,
         ?PhpVersion $phpVersion = null,
+        ?string $buildCommand = self::UNSET,
     ): Response {
         return $this->send(new UpdateEnvironment(
             environmentId: $environmentId,
@@ -114,6 +119,7 @@ final class EnvironmentsResource extends Resource
             cacheId: $cacheId,
             filesystemKeys: $filesystemKeys,
             phpVersion: $phpVersion,
+            buildCommand: $buildCommand,
         ));
     }
 
