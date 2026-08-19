@@ -8,6 +8,7 @@ use ArtisanBuild\LaravelCloudClient\Enums\InstanceScalingType;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceSize;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceType;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
+use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -26,7 +27,7 @@ final class CreateInstance extends Request implements HasBody
         protected string $environmentId,
         protected string $name,
         protected InstanceType $type,
-        protected InstanceSize $size,
+        protected InstanceSize|string $size,
         protected InstanceScalingType $scalingType,
         protected int $minReplicas,
         protected ?int $visibilityTimeout,
@@ -49,7 +50,7 @@ final class CreateInstance extends Request implements HasBody
         $body = [
             'name' => $this->name,
             'type' => $this->type->value,
-            'size' => $this->size->value,
+            'size' => Value::of($this->size),
             'scaling_type' => $this->scalingType->value,
             'min_replicas' => $this->minReplicas,
             'visibility_timeout' => $this->visibilityTimeout,

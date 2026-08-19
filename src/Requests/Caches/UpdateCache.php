@@ -6,6 +6,7 @@ namespace ArtisanBuild\LaravelCloudClient\Requests\Caches;
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
+use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -23,7 +24,7 @@ final class UpdateCache extends Request implements HasBody
     public function __construct(
         protected string $cacheId,
         protected ?string $name = null,
-        protected ?CacheSize $size = null,
+        protected CacheSize|string|null $size = null,
     ) {}
 
     public function resolveEndpoint(): string
@@ -38,7 +39,7 @@ final class UpdateCache extends Request implements HasBody
     {
         return array_filter([
             'name' => $this->name,
-            'size' => $this->size?->value,
+            'size' => Value::ofNullable($this->size),
         ], fn ($value) => $value !== null);
     }
 }

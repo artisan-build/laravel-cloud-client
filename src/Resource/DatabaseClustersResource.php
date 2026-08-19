@@ -18,6 +18,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\DeleteDatabaseClus
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\DeleteDatabaseUser;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\GetDatabaseCluster;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseClusters;
+use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseTypes;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabases;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseUsers;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\UpdateDatabaseCluster;
@@ -44,6 +45,21 @@ final class DatabaseClustersResource extends Resource
     }
 
     /**
+     * List the database types available when creating a cluster, each with
+     * the regions it runs in and the config schema its creation call expects.
+     *
+     * @throws ApiException
+     * @throws AuthenticationException
+     * @throws NotFoundException
+     * @throws RateLimitException
+     * @throws ValidationException
+     */
+    public function types(): Response
+    {
+        return $this->send(new ListDatabaseTypes);
+    }
+
+    /**
      * Create a new database cluster.
      *
      * @param  array<string, mixed>  $config
@@ -55,7 +71,7 @@ final class DatabaseClustersResource extends Resource
      * @throws ValidationException
      */
     public function create(
-        DatabaseType $type,
+        DatabaseType|string $type,
         string $name,
         string $region,
         array $config,

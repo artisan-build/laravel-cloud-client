@@ -6,6 +6,7 @@ namespace ArtisanBuild\LaravelCloudClient\Requests\Instances;
 
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceSize;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
+use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -22,7 +23,7 @@ final class UpdateInstance extends Request implements HasBody
 
     public function __construct(
         protected string $instanceId,
-        protected ?InstanceSize $size = null,
+        protected InstanceSize|string|null $size = null,
         // `uses_scheduler` is how Laravel Cloud turns the scheduler on for an
         // instance; it is a flag on the instance, not a resource of its own.
         // Null leaves the current setting alone, which is why it is not folded
@@ -41,7 +42,7 @@ final class UpdateInstance extends Request implements HasBody
     protected function defaultBody(): array
     {
         return array_filter([
-            'size' => $this->size?->value,
+            'size' => Value::ofNullable($this->size),
             'uses_scheduler' => $this->usesScheduler,
         ], fn ($value) => $value !== null);
     }

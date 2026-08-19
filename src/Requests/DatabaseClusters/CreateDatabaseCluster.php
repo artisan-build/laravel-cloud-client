@@ -6,6 +6,7 @@ namespace ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters;
 
 use ArtisanBuild\LaravelCloudClient\Enums\DatabaseType;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
+use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -21,7 +22,7 @@ final class CreateDatabaseCluster extends Request implements HasBody
     protected Method $method = Method::POST;
 
     public function __construct(
-        protected DatabaseType $type,
+        protected DatabaseType|string $type,
         protected string $name,
         protected string $region,
         /** @var array<string, mixed> */
@@ -40,7 +41,7 @@ final class CreateDatabaseCluster extends Request implements HasBody
     protected function defaultBody(): array
     {
         return array_filter([
-            'type' => $this->type->value,
+            'type' => Value::of($this->type),
             'name' => $this->name,
             'region' => $this->region,
             'config' => $this->databaseConfig,

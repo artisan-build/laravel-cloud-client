@@ -9,6 +9,7 @@ use ArtisanBuild\LaravelCloudClient\Enums\InstanceScalingType;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceSize;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceType;
 use ArtisanBuild\LaravelCloudClient\Enums\PhpVersion;
+use ArtisanBuild\LaravelCloudClient\Enums\Region;
 
 /*
  * The enums in this package are the API's vocabulary, and the bundled schema
@@ -55,6 +56,20 @@ it('resolves php versions from a bare version number for display', function (): 
         ->and(PhpVersion::Php84->label())->toBe('8.4')
         ->and(PhpVersion::Php84->value)->toBe('8.4:1')
         ->and(PhpVersion::tryFromLabel('8.1'))->toBeNull();
+});
+
+it('has regions matching the bundled api spec', function (): void {
+    // `GET /meta/regions` is the live list. This enum is only the fallback for
+    // when that call cannot be made, so it still has to say what the schema
+    // says — a fallback that is wrong is worse than no fallback.
+    expect(array_column(Region::cases(), 'value'))
+        ->toEqualCanonicalizing(apiSpecEnum('CloudRegion'));
+});
+
+it('labels every region', function (): void {
+    foreach (Region::cases() as $region) {
+        expect($region->label())->toContain($region->value);
+    }
 });
 
 it('has cache types matching the bundled api spec', function (): void {

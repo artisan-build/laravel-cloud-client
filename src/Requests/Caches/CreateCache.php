@@ -7,6 +7,7 @@ namespace ArtisanBuild\LaravelCloudClient\Requests\Caches;
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
 use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
+use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -22,10 +23,10 @@ final class CreateCache extends Request implements HasBody
     protected Method $method = Method::POST;
 
     public function __construct(
-        protected CacheType $type,
+        protected CacheType|string $type,
         protected string $name,
         protected string $region,
-        protected CacheSize $size,
+        protected CacheSize|string $size,
         protected bool $autoUpgradeEnabled,
         protected bool $isPublic,
         protected ?string $clusterId = null,
@@ -42,10 +43,10 @@ final class CreateCache extends Request implements HasBody
     protected function defaultBody(): array
     {
         return array_filter([
-            'type' => $this->type->value,
+            'type' => Value::of($this->type),
             'name' => $this->name,
             'region' => $this->region,
-            'size' => $this->size->value,
+            'size' => Value::of($this->size),
             'auto_upgrade_enabled' => $this->autoUpgradeEnabled,
             'is_public' => $this->isPublic,
             'cluster_id' => $this->clusterId,

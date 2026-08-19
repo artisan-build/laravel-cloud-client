@@ -16,6 +16,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\Instances\CreateInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\DeleteInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\GetInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\ListInstances;
+use ArtisanBuild\LaravelCloudClient\Requests\Instances\ListInstanceSizes;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\RestartInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\UpdateInstance;
 use ArtisanBuild\LaravelCloudClient\Resource;
@@ -53,7 +54,7 @@ final class InstancesResource extends Resource
         string $environmentId,
         string $name,
         InstanceType $type,
-        InstanceSize $size,
+        InstanceSize|string $size,
         InstanceScalingType $scalingType,
         int $minReplicas,
         ?int $visibilityTimeout,
@@ -73,6 +74,21 @@ final class InstancesResource extends Resource
             maxReplicas: $maxReplicas,
             usesScheduler: $usesScheduler,
         ));
+    }
+
+    /**
+     * List the available instance sizes, grouped into `general` and
+     * `managed_queue`.
+     *
+     * @throws ApiException
+     * @throws AuthenticationException
+     * @throws NotFoundException
+     * @throws RateLimitException
+     * @throws ValidationException
+     */
+    public function sizes(): Response
+    {
+        return $this->send(new ListInstanceSizes);
     }
 
     /**
@@ -98,7 +114,7 @@ final class InstancesResource extends Resource
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function update(string $instanceId, ?InstanceSize $size = null, ?bool $usesScheduler = null): Response
+    public function update(string $instanceId, InstanceSize|string|null $size = null, ?bool $usesScheduler = null): Response
     {
         return $this->send(new UpdateInstance(
             instanceId: $instanceId,

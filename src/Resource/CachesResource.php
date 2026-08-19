@@ -16,6 +16,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\Caches\DeleteCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\FlushCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\GetCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\ListCaches;
+use ArtisanBuild\LaravelCloudClient\Requests\Caches\ListCacheTypes;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\UpdateCache;
 use ArtisanBuild\LaravelCloudClient\Resource;
 use Saloon\Http\Response;
@@ -49,10 +50,10 @@ final class CachesResource extends Resource
      * @throws ValidationException
      */
     public function create(
-        CacheType $type,
+        CacheType|string $type,
         string $name,
         string $region,
-        CacheSize $size,
+        CacheSize|string $size,
         bool $autoUpgradeEnabled,
         bool $isPublic,
         ?string $clusterId = null,
@@ -66,6 +67,21 @@ final class CachesResource extends Resource
             isPublic: $isPublic,
             clusterId: $clusterId,
         ));
+    }
+
+    /**
+     * List the cache types available when creating a cache, each with the
+     * sizes and regions it supports.
+     *
+     * @throws ApiException
+     * @throws AuthenticationException
+     * @throws NotFoundException
+     * @throws RateLimitException
+     * @throws ValidationException
+     */
+    public function types(): Response
+    {
+        return $this->send(new ListCacheTypes);
     }
 
     /**
@@ -91,7 +107,7 @@ final class CachesResource extends Resource
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function update(string $cacheId, ?string $name = null, ?CacheSize $size = null): Response
+    public function update(string $cacheId, ?string $name = null, CacheSize|string|null $size = null): Response
     {
         return $this->send(new UpdateCache(
             cacheId: $cacheId,

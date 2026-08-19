@@ -28,6 +28,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\Caches\CreateCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\DeleteCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\GetCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\ListCaches;
+use ArtisanBuild\LaravelCloudClient\Requests\Caches\ListCacheTypes;
 use ArtisanBuild\LaravelCloudClient\Requests\Caches\UpdateCache;
 use ArtisanBuild\LaravelCloudClient\Requests\Commands\ExecuteCommand;
 use ArtisanBuild\LaravelCloudClient\Requests\Commands\GetCommand;
@@ -39,6 +40,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\DeleteDatabaseClus
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\GetDatabaseCluster;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseClusters;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabases;
+use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseTypes;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\UpdateDatabaseCluster;
 use ArtisanBuild\LaravelCloudClient\Requests\Deployments\CancelDeployment;
 use ArtisanBuild\LaravelCloudClient\Requests\Deployments\GetDeployment;
@@ -63,6 +65,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\Instances\CreateInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\DeleteInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\GetInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\ListInstances;
+use ArtisanBuild\LaravelCloudClient\Requests\Instances\ListInstanceSizes;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\RestartInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\UpdateInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Meta\GetOrganization;
@@ -120,6 +123,7 @@ function specVerifiedRequestEndpointsAndMethods(): array
 
         'caches list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->list(), ListCaches::class, Method::GET, '/caches', null],
         'caches create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->create(CacheType::LaravelValkey, 'new-cache', 'us-east-1', CacheSize::ValkeyFlex250Mb, true, false, $clusterId), CreateCache::class, Method::POST, '/caches', ['type' => 'laravel_valkey', 'name' => 'new-cache', 'region' => 'us-east-1', 'size' => 'valkey-flex-250mb', 'auto_upgrade_enabled' => true, 'is_public' => false, 'cluster_id' => $clusterId]],
+        'caches types endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->types(), ListCacheTypes::class, Method::GET, '/caches/types', null],
         'caches get endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->get($cacheId), GetCache::class, Method::GET, '/caches/'.$cacheId, null],
         'caches update endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->update($cacheId, size: CacheSize::ValkeyFlex1Gb), UpdateCache::class, Method::PATCH, '/caches/'.$cacheId, ['size' => 'valkey-flex-1gb']],
         'caches delete endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->delete($cacheId), DeleteCache::class, Method::DELETE, '/caches/'.$cacheId, null],
@@ -130,6 +134,7 @@ function specVerifiedRequestEndpointsAndMethods(): array
 
         'database clusters list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->list(), ListDatabaseClusters::class, Method::GET, '/databases/clusters', null],
         'database clusters create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->create(DatabaseType::LaravelMySql84, 'main-db', 'us-east-1', ['size' => 'mysql-flex-512mb'], $clusterId), CreateDatabaseCluster::class, Method::POST, '/databases/clusters', ['type' => 'laravel_mysql_84', 'name' => 'main-db', 'region' => 'us-east-1', 'config' => ['size' => 'mysql-flex-512mb'], 'cluster_id' => $clusterId]],
+        'database types endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->types(), ListDatabaseTypes::class, Method::GET, '/databases/types', null],
         'database clusters get endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->get($clusterId), GetDatabaseCluster::class, Method::GET, '/databases/clusters/'.$clusterId, null],
         'database clusters update endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->update($clusterId, ['size' => 'mysql-flex-1gb']), UpdateDatabaseCluster::class, Method::PATCH, '/databases/clusters/'.$clusterId, ['config' => ['size' => 'mysql-flex-1gb']]],
         'database clusters delete endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->databaseClusters()->delete($clusterId), DeleteDatabaseCluster::class, Method::DELETE, '/databases/clusters/'.$clusterId, null],
@@ -160,6 +165,7 @@ function specVerifiedRequestEndpointsAndMethods(): array
         'instances list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->list($environmentId), ListInstances::class, Method::GET, '/environments/'.$environmentId.'/instances', null],
         'instances create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->create($environmentId, 'web', InstanceType::Service, InstanceSize::Flex512Mb, InstanceScalingType::Custom, 1, null, null, 2), CreateInstance::class, Method::POST, '/environments/'.$environmentId.'/instances', ['name' => 'web', 'type' => 'service', 'size' => 'flex-512mb', 'scaling_type' => 'custom', 'min_replicas' => 1, 'visibility_timeout' => null, 'shutdown_timeout' => null, 'max_replicas' => 2]],
         'instances create sends uses_scheduler when asked to' => [fn (LaravelCloudClient $client): Response => $client->instances()->create($environmentId, 'web', InstanceType::Service, InstanceSize::Flex512Mb, InstanceScalingType::Custom, 1, null, null, 2, true), CreateInstance::class, Method::POST, '/environments/'.$environmentId.'/instances', ['name' => 'web', 'type' => 'service', 'size' => 'flex-512mb', 'scaling_type' => 'custom', 'min_replicas' => 1, 'visibility_timeout' => null, 'shutdown_timeout' => null, 'max_replicas' => 2, 'uses_scheduler' => true]],
+        'instances sizes endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->sizes(), ListInstanceSizes::class, Method::GET, '/instances/sizes', null],
         'instances get endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->get($instanceId), GetInstance::class, Method::GET, '/instances/'.$instanceId, null],
         'instances update endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->update($instanceId, size: InstanceSize::Flex512Mb), UpdateInstance::class, Method::PATCH, '/instances/'.$instanceId, ['size' => 'flex-512mb']],
         'instances update sends uses_scheduler when asked to' => [fn (LaravelCloudClient $client): Response => $client->instances()->update($instanceId, usesScheduler: true), UpdateInstance::class, Method::PATCH, '/instances/'.$instanceId, ['uses_scheduler' => true]],
@@ -223,3 +229,64 @@ it('pins current SDK request shapes that are NOT yet spec-verified and must not 
 
     $this->assertSentRequest($mockClient, $requestClass, $method, $endpoint, $body);
 })->with(currentRequestShapesNotYetSpecVerified());
+
+/*
+ * The enums are a snapshot of the API's vocabulary, not its definition. Cloud
+ * adds sizes and engines whenever it likes, and an interface reading the LIVE
+ * list will offer one of those long before this package is released again —
+ * so the request classes take a raw string as readily as a case, and what
+ * reaches the wire has to be identical either way.
+ */
+it('sends a live option value the bundled enums do not model', function (): void {
+    $mockClient = new MockClient([
+        MockResponse::make(body: json_encode(['data' => []]), status: 200),
+    ]);
+
+    $client = cloudClientWithMock($mockClient);
+
+    $client->caches()->create('some_future_engine', 'new-cache', 'us-east-1', 'future-4tb', true, false);
+
+    $this->assertSentRequest($mockClient, CreateCache::class, Method::POST, '/caches', [
+        'type' => 'some_future_engine',
+        'name' => 'new-cache',
+        'region' => 'us-east-1',
+        'size' => 'future-4tb',
+        'auto_upgrade_enabled' => true,
+        'is_public' => false,
+    ]);
+});
+
+it('sends a live database type and instance size the bundled enums do not model', function (): void {
+    $mockClient = new MockClient([
+        MockResponse::make(body: json_encode(['data' => []]), status: 200),
+    ]);
+
+    $client = cloudClientWithMock($mockClient);
+
+    $client->databaseClusters()->create('neon_serverless_postgres_19', 'main-db', 'us-east-1', ['cu_min' => 0.25]);
+
+    $this->assertSentRequest($mockClient, CreateDatabaseCluster::class, Method::POST, '/databases/clusters', [
+        'type' => 'neon_serverless_postgres_19',
+        'name' => 'main-db',
+        'region' => 'us-east-1',
+        'config' => ['cu_min' => 0.25],
+    ]);
+
+    $mockClient = new MockClient([
+        MockResponse::make(body: json_encode(['data' => []]), status: 200),
+    ]);
+
+    $client = cloudClientWithMock($mockClient);
+
+    $client->instances()->create('env-01k7env000000000000000001', 'queue', InstanceType::ManagedQueue, 'mq.pro.32gb', InstanceScalingType::Auto, 0, null, null);
+
+    $this->assertSentRequest($mockClient, CreateInstance::class, Method::POST, '/environments/env-01k7env000000000000000001/instances', [
+        'name' => 'queue',
+        'type' => 'managed_queue',
+        'size' => 'mq.pro.32gb',
+        'scaling_type' => 'auto',
+        'min_replicas' => 0,
+        'visibility_timeout' => null,
+        'shutdown_timeout' => null,
+    ]);
+});
