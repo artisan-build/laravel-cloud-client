@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
+use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
 use ArtisanBuild\LaravelCloudClient\Enums\DaemonType;
 use ArtisanBuild\LaravelCloudClient\Enums\DatabaseType;
 use ArtisanBuild\LaravelCloudClient\Enums\DomainVerificationMethod;
@@ -118,7 +119,7 @@ function specVerifiedRequestEndpointsAndMethods(): array
         'background processes delete endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->backgroundProcesses()->delete($processId), DeleteBackgroundProcess::class, Method::DELETE, '/background-processes/'.$processId, null],
 
         'caches list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->list(), ListCaches::class, Method::GET, '/caches', null],
-        'caches create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->create('laravel_valkey', 'new-cache', 'us-east-1', CacheSize::ValkeyFlex250Mb, true, false, $clusterId), CreateCache::class, Method::POST, '/caches', ['type' => 'laravel_valkey', 'name' => 'new-cache', 'region' => 'us-east-1', 'size' => 'valkey-flex-250mb', 'auto_upgrade_enabled' => true, 'is_public' => false, 'cluster_id' => $clusterId]],
+        'caches create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->create(CacheType::LaravelValkey, 'new-cache', 'us-east-1', CacheSize::ValkeyFlex250Mb, true, false, $clusterId), CreateCache::class, Method::POST, '/caches', ['type' => 'laravel_valkey', 'name' => 'new-cache', 'region' => 'us-east-1', 'size' => 'valkey-flex-250mb', 'auto_upgrade_enabled' => true, 'is_public' => false, 'cluster_id' => $clusterId]],
         'caches get endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->get($cacheId), GetCache::class, Method::GET, '/caches/'.$cacheId, null],
         'caches update endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->update($cacheId, size: CacheSize::ValkeyFlex1Gb), UpdateCache::class, Method::PATCH, '/caches/'.$cacheId, ['size' => 'valkey-flex-1gb']],
         'caches delete endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->caches()->delete($cacheId), DeleteCache::class, Method::DELETE, '/caches/'.$cacheId, null],
@@ -158,8 +159,10 @@ function specVerifiedRequestEndpointsAndMethods(): array
 
         'instances list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->list($environmentId), ListInstances::class, Method::GET, '/environments/'.$environmentId.'/instances', null],
         'instances create endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->create($environmentId, 'web', InstanceType::Service, InstanceSize::Flex512Mb, InstanceScalingType::Custom, 1, null, null, 2), CreateInstance::class, Method::POST, '/environments/'.$environmentId.'/instances', ['name' => 'web', 'type' => 'service', 'size' => 'flex-512mb', 'scaling_type' => 'custom', 'min_replicas' => 1, 'visibility_timeout' => null, 'shutdown_timeout' => null, 'max_replicas' => 2]],
+        'instances create sends uses_scheduler when asked to' => [fn (LaravelCloudClient $client): Response => $client->instances()->create($environmentId, 'web', InstanceType::Service, InstanceSize::Flex512Mb, InstanceScalingType::Custom, 1, null, null, 2, true), CreateInstance::class, Method::POST, '/environments/'.$environmentId.'/instances', ['name' => 'web', 'type' => 'service', 'size' => 'flex-512mb', 'scaling_type' => 'custom', 'min_replicas' => 1, 'visibility_timeout' => null, 'shutdown_timeout' => null, 'max_replicas' => 2, 'uses_scheduler' => true]],
         'instances get endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->get($instanceId), GetInstance::class, Method::GET, '/instances/'.$instanceId, null],
         'instances update endpoint and body are spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->update($instanceId, size: InstanceSize::Flex512Mb), UpdateInstance::class, Method::PATCH, '/instances/'.$instanceId, ['size' => 'flex-512mb']],
+        'instances update sends uses_scheduler when asked to' => [fn (LaravelCloudClient $client): Response => $client->instances()->update($instanceId, usesScheduler: true), UpdateInstance::class, Method::PATCH, '/instances/'.$instanceId, ['uses_scheduler' => true]],
         'instances delete endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->instances()->delete($instanceId), DeleteInstance::class, Method::DELETE, '/instances/'.$instanceId, null],
 
         'meta organization endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->meta()->organization(), GetOrganization::class, Method::GET, '/meta/organization', $bodyNotChecked],

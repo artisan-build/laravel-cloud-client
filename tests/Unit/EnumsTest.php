@@ -259,8 +259,9 @@ it('has correct environment type values', function () {
 });
 
 it('has correct php version values', function () {
-    expect(PhpVersion::Php81->value)->toBe('8.1');
-    expect(PhpVersion::Php82->value)->toBe('8.2');
-    expect(PhpVersion::Php83->value)->toBe('8.3');
-    expect(PhpVersion::Php84->value)->toBe('8.4');
+    // The API's own representations, suffix included — see PhpVersion.
+    expect(PhpVersion::Php82->value)->toBe('8.2:1');
+    expect(PhpVersion::Php83->value)->toBe('8.3:1');
+    expect(PhpVersion::Php84->value)->toBe('8.4:1');
+    expect(PhpVersion::Php85->value)->toBe('8.5:1');
 });

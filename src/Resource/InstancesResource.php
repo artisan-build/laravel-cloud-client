@@ -59,6 +59,7 @@ final class InstancesResource extends Resource
         ?int $visibilityTimeout,
         ?int $shutdownTimeout,
         ?int $maxReplicas = null,
+        ?bool $usesScheduler = null,
     ): Response {
         return $this->send(new CreateInstance(
             environmentId: $environmentId,
@@ -70,6 +71,7 @@ final class InstancesResource extends Resource
             visibilityTimeout: $visibilityTimeout,
             shutdownTimeout: $shutdownTimeout,
             maxReplicas: $maxReplicas,
+            usesScheduler: $usesScheduler,
         ));
     }
 
@@ -96,11 +98,12 @@ final class InstancesResource extends Resource
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function update(string $instanceId, ?InstanceSize $size = null): Response
+    public function update(string $instanceId, ?InstanceSize $size = null, ?bool $usesScheduler = null): Response
     {
         return $this->send(new UpdateInstance(
             instanceId: $instanceId,
             size: $size,
+            usesScheduler: $usesScheduler,
         ));
     }
 

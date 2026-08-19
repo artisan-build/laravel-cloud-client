@@ -23,6 +23,11 @@ final class UpdateInstance extends Request implements HasBody
     public function __construct(
         protected string $instanceId,
         protected ?InstanceSize $size = null,
+        // `uses_scheduler` is how Laravel Cloud turns the scheduler on for an
+        // instance; it is a flag on the instance, not a resource of its own.
+        // Null leaves the current setting alone, which is why it is not folded
+        // into the array_filter below as a plain boolean.
+        protected ?bool $usesScheduler = null,
     ) {}
 
     public function resolveEndpoint(): string
@@ -37,6 +42,7 @@ final class UpdateInstance extends Request implements HasBody
     {
         return array_filter([
             'size' => $this->size?->value,
+            'uses_scheduler' => $this->usesScheduler,
         ], fn ($value) => $value !== null);
     }
 }

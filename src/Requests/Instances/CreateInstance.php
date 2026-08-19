@@ -32,6 +32,8 @@ final class CreateInstance extends Request implements HasBody
         protected ?int $visibilityTimeout,
         protected ?int $shutdownTimeout,
         protected ?int $maxReplicas = null,
+        // See UpdateInstance: the scheduler is a flag on the instance.
+        protected ?bool $usesScheduler = null,
     ) {}
 
     public function resolveEndpoint(): string
@@ -56,6 +58,10 @@ final class CreateInstance extends Request implements HasBody
 
         if ($this->maxReplicas !== null) {
             $body['max_replicas'] = $this->maxReplicas;
+        }
+
+        if ($this->usesScheduler !== null) {
+            $body['uses_scheduler'] = $this->usesScheduler;
         }
 
         return $body;

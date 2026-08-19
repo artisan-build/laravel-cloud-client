@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ArtisanBuild\LaravelCloudClient\Resource;
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
+use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
 use ArtisanBuild\LaravelCloudClient\Exceptions\ApiException;
 use ArtisanBuild\LaravelCloudClient\Exceptions\AuthenticationException;
 use ArtisanBuild\LaravelCloudClient\Exceptions\NotFoundException;
@@ -48,7 +49,7 @@ final class CachesResource extends Resource
      * @throws ValidationException
      */
     public function create(
-        string $type,
+        CacheType $type,
         string $name,
         string $region,
         CacheSize $size,

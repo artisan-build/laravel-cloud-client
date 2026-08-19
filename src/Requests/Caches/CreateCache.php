@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ArtisanBuild\LaravelCloudClient\Requests\Caches;
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
+use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
@@ -21,7 +22,7 @@ final class CreateCache extends Request implements HasBody
     protected Method $method = Method::POST;
 
     public function __construct(
-        protected string $type,
+        protected CacheType $type,
         protected string $name,
         protected string $region,
         protected CacheSize $size,
@@ -41,7 +42,7 @@ final class CreateCache extends Request implements HasBody
     protected function defaultBody(): array
     {
         return array_filter([
-            'type' => $this->type,
+            'type' => $this->type->value,
             'name' => $this->name,
             'region' => $this->region,
             'size' => $this->size->value,

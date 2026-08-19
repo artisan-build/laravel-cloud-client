@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
+use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
 use ArtisanBuild\LaravelCloudClient\LaravelCloudClient;
 use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
@@ -38,7 +39,7 @@ it('creates cache', function () {
     $client = new LaravelCloudClient(apiToken: 'test-token');
     $client->withMockClient($mockClient);
 
-    $response = $client->caches()->create('laravel_valkey', 'new-cache', 'us-east-1', CacheSize::ValkeyFlex250Mb, true, false);
+    $response = $client->caches()->create(CacheType::LaravelValkey, 'new-cache', 'us-east-1', CacheSize::ValkeyFlex250Mb, true, false);
 
     expect($response->status())->toBe(201);
 });
