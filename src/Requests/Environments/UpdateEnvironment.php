@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ArtisanBuild\LaravelCloudClient\Requests\Environments;
 
+use ArtisanBuild\LaravelCloudClient\Enums\PhpVersion;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
@@ -29,6 +30,10 @@ final class UpdateEnvironment extends Request implements HasBody
         protected ?string $cacheId = self::UNSET,
         /** @var array<int, array{id: string, disk: string, is_default_disk: bool}>|null */
         protected ?array $filesystemKeys = null,
+        // The runtime the environment builds and runs on. Null leaves it at
+        // whatever Cloud defaults to, which is why this is nullable rather than
+        // using the UNSET sentinel the string fields need.
+        protected ?PhpVersion $phpVersion = null,
     ) {}
 
     public function resolveEndpoint(): string
@@ -57,6 +62,10 @@ final class UpdateEnvironment extends Request implements HasBody
 
         if ($this->cacheId !== self::UNSET) {
             $body['cache_id'] = $this->cacheId === '' ? null : $this->cacheId;
+        }
+
+        if ($this->phpVersion instanceof PhpVersion) {
+            $body['php_version'] = $this->phpVersion->value;
         }
 
         if ($this->filesystemKeys !== null) {

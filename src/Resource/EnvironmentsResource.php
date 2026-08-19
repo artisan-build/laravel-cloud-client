@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ArtisanBuild\LaravelCloudClient\Resource;
 
 use ArtisanBuild\LaravelCloudClient\Enums\EnvironmentVariablesInsertMethod;
+use ArtisanBuild\LaravelCloudClient\Enums\PhpVersion;
 use ArtisanBuild\LaravelCloudClient\Exceptions\ApiException;
 use ArtisanBuild\LaravelCloudClient\Exceptions\AuthenticationException;
 use ArtisanBuild\LaravelCloudClient\Exceptions\NotFoundException;
@@ -103,6 +104,7 @@ final class EnvironmentsResource extends Resource
         ?string $databaseSchemaId = self::UNSET,
         ?string $cacheId = self::UNSET,
         ?array $filesystemKeys = null,
+        ?PhpVersion $phpVersion = null,
     ): Response {
         return $this->send(new UpdateEnvironment(
             environmentId: $environmentId,
@@ -111,6 +113,7 @@ final class EnvironmentsResource extends Resource
             databaseSchemaId: $databaseSchemaId,
             cacheId: $cacheId,
             filesystemKeys: $filesystemKeys,
+            phpVersion: $phpVersion,
         ));
     }
 
