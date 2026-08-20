@@ -265,3 +265,55 @@ it('has correct php version values', function () {
     expect(PhpVersion::Php84->value)->toBe('8.4:1');
     expect(PhpVersion::Php85->value)->toBe('8.5:1');
 });
+
+/*
+| The API labels a managed-queue size with its TIER alone — every `mq.flex.*`
+| entry is "Flex" — so `label()` and `labelFor()` rebuild the size into it.
+*/
+
+it('labels a managed queue size with its tier and its size', function () {
+    expect(InstanceSize::MqFlex512Mb->label())->toBe('Flex 512 MB');
+    expect(InstanceSize::MqPro1Gb->label())->toBe('Pro 1 GB');
+    expect(InstanceSize::MqDedicatedPro16Gb->label())->toBe('Dedicated Pro 16 GB');
+    expect(InstanceSize::MqDedicatedFlex256Mb->label())->toBe('Dedicated Flex 256 MB');
+});
+
+it('labels the two id formats of one size identically', function () {
+    // The legacy hyphenated id and the current dotted one are the same size,
+    // which is what lets a caller detect the repeat by its label.
+    expect(InstanceSize::MqPro1Gb->label())->toBe(InstanceSize::MqProDot1Gb->label());
+});
+
+it('labels a managed queue size the enum has never heard of', function () {
+    expect(InstanceSize::tryFrom('mq.pro.32gb'))->toBeNull();
+    expect(InstanceSize::labelFor('mq.pro.32gb'))->toBe('Pro 32 GB');
+    expect(InstanceSize::labelFor('mq.turbo.4gb'))->toBe('Turbo 4 GB');
+});
+
+it('prefers the reported memory over the size spelled in the id', function () {
+    expect(InstanceSize::labelFor('mq.flex.1gb', 2048))->toBe('Flex 2 GB');
+    expect(InstanceSize::labelFor('mq.flex.256mb', 256))->toBe('Flex 256 MB');
+    // MiB, reported as the GB the id and the pricing page both use.
+    expect(InstanceSize::labelFor('mq.flex.1gb', 1024))->toBe('Flex 1 GB');
+    expect(InstanceSize::labelFor('mq.flex.1gb', 1536))->toBe('Flex 1.5 GB');
+});
+
+it('keeps a trailing token that is not a size', function () {
+    // Only a token that parses as a size is consumed by the size; anything
+    // else is part of the tier and stays in the label.
+    expect(InstanceSize::labelFor('mq.pro.metal', 4096))->toBe('Pro Metal 4 GB');
+});
+
+it('declines to label an id it cannot read as a managed queue size', function () {
+    // Null, not a guess: the caller falls back to whatever the API sent.
+    expect(InstanceSize::labelFor('mq.mystery'))->toBeNull();
+    expect(InstanceSize::labelFor('mq'))->toBeNull();
+    expect(InstanceSize::labelFor('flex-512mb'))->toBeNull();
+    expect(InstanceSize::labelFor('mq.flex.1gb', 0))->toBeNull();
+});
+
+it('leaves a general instance size as the id the API names it by', function () {
+    // Nothing renders these in a select, so there is no better label to invent.
+    expect(InstanceSize::Flex512Mb->label())->toBe('flex-512mb');
+    expect(InstanceSize::ProC1Vcpu1Gb->label())->toBe('pro.c-1vcpu-1gb');
+});
