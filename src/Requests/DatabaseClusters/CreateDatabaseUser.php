@@ -9,6 +9,7 @@ use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
+use SensitiveParameter;
 
 /**
  * Create a new user in a database cluster.
@@ -22,7 +23,7 @@ final class CreateDatabaseUser extends Request implements HasBody
     public function __construct(
         protected string $clusterId,
         protected string $username,
-        protected ?string $password = null,
+        #[SensitiveParameter] protected ?string $password = null,
     ) {}
 
     public function resolveEndpoint(): string

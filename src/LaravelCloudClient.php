@@ -23,6 +23,7 @@ use ArtisanBuild\LaravelCloudClient\Resource\ObjectStorageResource;
 use Saloon\Http\Connector;
 use Saloon\Http\Response;
 use Saloon\Traits\Plugins\AcceptsJson;
+use SensitiveParameter;
 
 /**
  * Laravel Cloud API Client
@@ -51,7 +52,7 @@ final class LaravelCloudClient extends Connector
      * @throws AuthenticationException When no API token is available
      */
     public function __construct(
-        ?string $apiToken = null,
+        #[SensitiveParameter] ?string $apiToken = null,
         ?string $baseUrl = null,
         ?bool $retryOnRateLimit = null,
         ?int $maxRetries = null,
@@ -240,7 +241,7 @@ final class LaravelCloudClient extends Connector
      *
      * @throws AuthenticationException
      */
-    private function resolveApiToken(?string $apiToken): string
+    private function resolveApiToken(#[SensitiveParameter] ?string $apiToken): string
     {
         if ($apiToken !== null && $apiToken !== '') {
             return $apiToken;

@@ -24,6 +24,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\ListDatabaseUsers;
 use ArtisanBuild\LaravelCloudClient\Requests\DatabaseClusters\UpdateDatabaseCluster;
 use ArtisanBuild\LaravelCloudClient\Resource;
 use Saloon\Http\Response;
+use SensitiveParameter;
 
 /**
  * Resource for managing database clusters.
@@ -213,7 +214,7 @@ final class DatabaseClustersResource extends Resource
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function createUser(string $clusterId, string $username, ?string $password = null): Response
+    public function createUser(string $clusterId, string $username, #[SensitiveParameter] ?string $password = null): Response
     {
         return $this->send(new CreateDatabaseUser(
             clusterId: $clusterId,
