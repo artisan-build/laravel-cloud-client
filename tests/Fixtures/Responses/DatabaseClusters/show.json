@@ -27,14 +27,6 @@
             }
         },
         "relationships": {
-            "schemas": {
-                "data": [
-                    {
-                        "id": "schema-01k7schema0000000000001",
-                        "type": "databaseSchemas"
-                    }
-                ]
-            },
             "databases": {
                 "data": [
                     {

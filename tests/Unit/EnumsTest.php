@@ -35,15 +35,31 @@ it('provides database type labels', function () {
 });
 
 it('has correct instance type values', function () {
+    // All four the published spec enumerates. `app` is the one an environment's
+    // application actually runs on, and leaving it out is what made every real
+    // environment read as having no scheduler.
     expect(array_map(fn (InstanceType $type): string => $type->value, InstanceType::cases()))->toBe([
+        'app',
         'service',
+        'queue',
         'managed_queue',
     ]);
 });
 
 it('provides instance type labels', function () {
+    expect(InstanceType::App->label())->toBe('App');
     expect(InstanceType::Service->label())->toBe('Service');
+    expect(InstanceType::Queue->label())->toBe('Queue');
     expect(InstanceType::ManagedQueue->label())->toBe('Managed Queue');
+});
+
+it('knows which instance types run application code', function () {
+    // Cloud reports `app` for the instance it creates with an environment and
+    // `service` elsewhere; both carry the scheduler flag, neither queue type does.
+    expect(InstanceType::App->runsApplicationCode())->toBeTrue()
+        ->and(InstanceType::Service->runsApplicationCode())->toBeTrue()
+        ->and(InstanceType::Queue->runsApplicationCode())->toBeFalse()
+        ->and(InstanceType::ManagedQueue->runsApplicationCode())->toBeFalse();
 });
 
 it('pins documented cache size values and excludes old invalid values', function () {

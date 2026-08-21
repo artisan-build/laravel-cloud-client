@@ -68,7 +68,11 @@ it('gets environment', function () {
     expect($response->status())->toBe(200);
     expect($response->json('data.type'))->toBe('environments');
     expect($response->json('data.attributes.name'))->toBe('production');
-    expect($response->json('data.relationships.application.data.type'))->toBe('applications');
+    // The include GetEnvironment always sends is what makes these present at
+    // all: a bare read comes back with no relationships object whatsoever.
+    expect($response->json('data.relationships.database'))->toBe(['data' => null]);
+    expect($response->json('data.relationships.cache'))->toBe(['data' => null]);
+    expect($response->json('data.relationships.buckets'))->toBe(['data' => []]);
 });
 
 it('updates environment', function () {

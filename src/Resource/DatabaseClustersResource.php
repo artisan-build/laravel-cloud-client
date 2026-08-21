@@ -33,15 +33,18 @@ final class DatabaseClustersResource extends Resource
     /**
      * List all database clusters for an environment.
      *
+     * Pass `databases` as the include to have each cluster carry the schemas
+     * that belong to it; without one, Cloud returns no relationships at all.
+     *
      * @throws ApiException
      * @throws AuthenticationException
      * @throws NotFoundException
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function list(): Response
+    public function list(?string $include = null): Response
     {
-        return $this->send(new ListDatabaseClusters);
+        return $this->send(new ListDatabaseClusters(include: $include));
     }
 
     /**

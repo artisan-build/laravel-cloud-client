@@ -25,7 +25,8 @@ it('lists instances', function () {
     expect($response->status())->toBe(200);
     expect($response->json('data'))->toBeArray();
     expect($response->json('data.0.type'))->toBe('instances');
-    expect($response->json('data.0.attributes.type'))->toBe('service');
+    // Cloud's own name for an environment's application instance.
+    expect($response->json('data.0.attributes.type'))->toBe('app');
     expect($response->json('data.0.relationships.environment.data.id'))->toBe('env-01k7env000000000000000001');
 });
 

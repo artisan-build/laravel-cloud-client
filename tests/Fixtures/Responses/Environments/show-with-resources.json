@@ -1,0 +1,86 @@
+{
+    "data": {
+        "id": "env-01k7env000000000000000002",
+        "type": "environments",
+        "attributes": {
+            "name": "main",
+            "slug": "main",
+            "status": "running",
+            "created_from_automation": false,
+            "vanity_domain": "example-main-h7le17.laravel.cloud",
+            "php_major_version": "8.5",
+            "build_command": "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader\n\n# npm ci --audit false\n# npm run build",
+            "node_version": "24",
+            "deploy_command": "php artisan migrate --force",
+            "uses_octane": false,
+            "uses_hibernation": true,
+            "hibernation_wake_up_interval": null,
+            "uses_push_to_deploy": true,
+            "uses_deploy_hook": false,
+            "environment_variables": [
+                {
+                    "key": "APP_KEY",
+                    "value": "base64:00000000000000000000000000000000000000000000"
+                },
+                {
+                    "key": "APP_URL",
+                    "value": "https://example-main-h7le17.laravel.cloud"
+                }
+            ],
+            "network_settings": {
+                "cache": {
+                    "strategy": "default"
+                },
+                "response_headers": {
+                    "frame": "deny",
+                    "content_type": "nosniff",
+                    "hsts": {
+                        "max_age": 31536000,
+                        "include_subdomains": true,
+                        "preload": false
+                    }
+                },
+                "firewall": {
+                    "bot_categories": [],
+                    "rate_limit": {
+                        "level": "throttle",
+                        "per_minute": 100,
+                        "4xx": false,
+                        "429": false
+                    },
+                    "under_attack_mode_started_at": "",
+                    "block_path": true
+                },
+                "content_converter": false
+            },
+            "created_at": "2026-06-11T10:27:07.000000Z"
+        },
+        "relationships": {
+            "database": {
+                "data": {
+                    "id": "65405635",
+                    "type": "databaseSchemas"
+                }
+            },
+            "cache": {
+                "data": {
+                    "id": "cache-01k7cache00000000000001",
+                    "type": "caches"
+                }
+            },
+            "buckets": {
+                "data": [
+                    {
+                        "id": "fls-01k7fls000000000000001",
+                        "type": "filesystems"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": {
+                "href": "https://cloud.laravel.com/api/environments/env-01k7env000000000000000002"
+            }
+        }
+    }
+}

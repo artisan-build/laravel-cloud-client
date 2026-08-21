@@ -30,6 +30,7 @@ function responseFixtureSchemas(): array
         'Deployments/trigger.json' => 'DeploymentResource',
         'Environments/list.json' => 'EnvironmentResource',
         'Environments/show.json' => 'EnvironmentResource',
+        'Environments/show-with-resources.json' => 'EnvironmentResource',
         'Instances/list.json' => 'InstanceResource',
         'Instances/show.json' => 'InstanceResource',
         'Meta/organization.json' => 'OrganizationResource',

@@ -28,11 +28,52 @@
                 }
             },
             "relationships": {
-                "schemas": {
-                    "data": []
-                },
                 "databases": {
-                    "data": []
+                    "data": [
+                        {
+                            "id": "db-schema-01k7schema0000000001",
+                            "type": "databaseSchemas"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "sweet-glitter-01646948",
+            "type": "databases",
+            "attributes": {
+                "name": "example",
+                "type": "neon_serverless_postgres_18",
+                "status": "available",
+                "region": "us-east-2",
+                "created_at": "2026-01-15T10:00:00Z",
+                "config": {
+                    "cu_min": 0.25,
+                    "cu_max": 0.25,
+                    "suspend_seconds": 300,
+                    "retention_days": 0
+                },
+                "connection": {
+                    "hostname": "ep-example-a5aosj2n.aws-us-east-2.pg.laravel.cloud",
+                    "port": 5432,
+                    "protocol": "postgres",
+                    "driver": "pgsql",
+                    "username": "laravel",
+                    "password": "secret"
+                }
+            },
+            "relationships": {
+                "databases": {
+                    "data": [
+                        {
+                            "id": "65405623",
+                            "type": "databaseSchemas"
+                        },
+                        {
+                            "id": "65405635",
+                            "type": "databaseSchemas"
+                        }
+                    ]
                 }
             }
         }
@@ -50,7 +91,7 @@
         "links": [],
         "path": "https://cloud.laravel.com/api/databases/clusters",
         "per_page": 25,
-        "to": 1,
-        "total": 1
+        "to": 2,
+        "total": 2
     }
 }
