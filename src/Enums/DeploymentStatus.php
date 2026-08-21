@@ -36,6 +36,14 @@ enum DeploymentStatus: string
             self::BuildCreated,
             self::BuildQueued,
             self::BuildRunning,
+            // `build.succeeded` is a MIDPOINT, not an end: the build finished
+            // and the deployment phase has yet to run. It was missing here,
+            // which made isComplete() true for it — so a poll that happened to
+            // sample this status read a healthy deployment as finished-and-not-
+            // successful. App\Cloud\Provisioner turns that into a thrown
+            // "Laravel Cloud reported the deployment as build.succeeded" and
+            // fails a deployment that was progressing normally.
+            self::BuildSucceeded,
             self::DeploymentPending,
             self::DeploymentCreated,
             self::DeploymentQueued,

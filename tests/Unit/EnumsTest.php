@@ -251,6 +251,10 @@ it('checks if deployment is in progress', function () {
     expect(DeploymentStatus::Pending->isInProgress())->toBeTrue();
     expect(DeploymentStatus::DeploymentRunning->isInProgress())->toBeTrue();
     expect(DeploymentStatus::DeploymentSucceeded->isInProgress())->toBeFalse();
+    // A MIDPOINT: the build finished and the deployment has yet to run.
+    // Absent from the in-progress set, this read as complete-and-unsuccessful.
+    expect(DeploymentStatus::BuildSucceeded->isInProgress())->toBeTrue();
+    expect(DeploymentStatus::BuildSucceeded->isSuccessful())->toBeFalse();
     expect(DeploymentStatus::Failed->isInProgress())->toBeFalse();
 });
 
@@ -258,6 +262,7 @@ it('checks if deployment is complete', function () {
     expect(DeploymentStatus::Pending->isComplete())->toBeFalse();
     expect(DeploymentStatus::DeploymentRunning->isComplete())->toBeFalse();
     expect(DeploymentStatus::DeploymentSucceeded->isComplete())->toBeTrue();
+    expect(DeploymentStatus::BuildSucceeded->isComplete())->toBeFalse();
     expect(DeploymentStatus::Failed->isComplete())->toBeTrue();
 });
 
