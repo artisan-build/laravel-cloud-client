@@ -13,19 +13,33 @@ use Saloon\Http\Faking\MockClient;
 use Saloon\Http\PendingRequest;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
+use Saloon\Laravel\SaloonServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
     public const BODY_NOT_CHECKED = '__laravel_cloud_body_not_checked__';
 
     /**
+     * This package does not depend on saloonphp/laravel-plugin, but a monorepo
+     * that vendors it alongside a package that does — scalpels.app, via
+     * artisan-build/forge-client — runs both suites in one PHP process. The
+     * plugin's service provider sets PROCESS-WIDE Saloon statics: a sender
+     * resolver that reads config('saloon.default_sender'), and global middleware
+     * that resolves the 'saloon' container binding. Those statics outlive the
+     * application that set them, so this Testbench application has to boot the
+     * plugin as well or every request in this suite dies on a config key and a
+     * binding that are not there.
+     *
+     * Standalone, the class does not exist and this is a no-op.
+     *
      * @return array<int, class-string>
      */
     protected function getPackageProviders($app): array
     {
-        return [
+        return array_values(array_filter([
             LaravelCloudServiceProvider::class,
-        ];
+            class_exists(SaloonServiceProvider::class) ? SaloonServiceProvider::class : null,
+        ]));
     }
 
     /**
