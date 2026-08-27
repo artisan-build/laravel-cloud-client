@@ -29,7 +29,16 @@ final class CreateInstance extends Request implements HasBody
         protected InstanceType $type,
         protected InstanceSize|string $size,
         protected InstanceScalingType $scalingType,
-        protected int $minReplicas,
+        // NULL OMITS IT, and omission is the only correct body for two of the
+        // three scaling types. Cloud's schema: "Only applicable to the `custom`
+        // scaling type, and rejected when used with `auto`. Not applicable to
+        // managed queues, which always scale to zero when idle."
+        //
+        // Nullable rather than defaulted-to-null because it sits before two
+        // parameters that have no default; and null means ABSENT rather than
+        // `null` on the wire, unlike the two timeouts below, which the schema
+        // types `["integer","null"]` and which are correct as nulls.
+        protected ?int $minReplicas,
         protected ?int $visibilityTimeout,
         protected ?int $shutdownTimeout,
         protected ?int $maxReplicas = null,
@@ -52,10 +61,19 @@ final class CreateInstance extends Request implements HasBody
             'type' => $this->type->value,
             'size' => Value::of($this->size),
             'scaling_type' => $this->scalingType->value,
-            'min_replicas' => $this->minReplicas,
-            'visibility_timeout' => $this->visibilityTimeout,
-            'shutdown_timeout' => $this->shutdownTimeout,
         ];
+
+        // Omitted rather than appended at the end, so the body still reads in
+        // the schema's own order and a service instance's fixture does not have
+        // to be reshuffled to say the same thing.
+        if ($this->minReplicas !== null) {
+            $body['min_replicas'] = $this->minReplicas;
+        }
+
+        // Sent even as nulls: the schema types both `["integer","null"]`, so a
+        // null is a value here and not an absence.
+        $body['visibility_timeout'] = $this->visibilityTimeout;
+        $body['shutdown_timeout'] = $this->shutdownTimeout;
 
         if ($this->maxReplicas !== null) {
             $body['max_replicas'] = $this->maxReplicas;

@@ -56,7 +56,11 @@ final class InstancesResource extends Resource
         InstanceType $type,
         InstanceSize|string $size,
         InstanceScalingType $scalingType,
-        int $minReplicas,
+        // Nullable, and null OMITS it from the body — see CreateInstance. A
+        // `custom` service instance still sends one; an `auto` one and a
+        // managed queue must not, and a non-nullable type here left no way to
+        // say so.
+        ?int $minReplicas,
         ?int $visibilityTimeout,
         ?int $shutdownTimeout,
         ?int $maxReplicas = null,
