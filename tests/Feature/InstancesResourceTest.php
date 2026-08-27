@@ -146,7 +146,9 @@ it('serializes a worker background process without a command', function () {
         name: 'queue',
         type: InstanceType::ManagedQueue,
         size: 'mq-1',
-        scalingType: InstanceScalingType::Auto,
+        // `custom`: what a live managed queue carries. `auto` is a member of
+        // the enum and is refused for this instance type.
+        scalingType: InstanceScalingType::Custom,
         minReplicas: null,
         visibilityTimeout: null,
         shutdownTimeout: null,

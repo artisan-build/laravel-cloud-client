@@ -280,16 +280,22 @@ it('sends a live database type and instance size the bundled enums do not model'
 
     // `min_replicas` is passed as NULL and must not reach the body. This
     // fixture used to pass 0 and assert `'min_replicas' => 0`, which is exactly
-    // the body Cloud rejects — the schema says the field is "rejected when used
-    // with `auto`" and "not applicable to managed queues". A fixture agreeing
-    // with the code and disagreeing with the spec is what let this ship.
-    $client->instances()->create('env-01k7env000000000000000001', 'queue', InstanceType::ManagedQueue, 'mq.pro.32gb', InstanceScalingType::Auto, null, null, null);
+    // the body Cloud rejects — the schema says the field is "not applicable to
+    // managed queues". A fixture agreeing with the code and disagreeing with
+    // the spec is what let this ship.
+    //
+    // And `custom`, not `auto`. `auto` is in InstanceScalingType and Cloud
+    // refuses it for a managed queue; `custom` is what a live production
+    // managed queue reports. This fixture asserted the refused body for three
+    // releases, which is the same failure one paragraph up in a different
+    // field.
+    $client->instances()->create('env-01k7env000000000000000001', 'queue', InstanceType::ManagedQueue, 'mq.pro.32gb', InstanceScalingType::Custom, null, null, null);
 
     $this->assertSentRequest($mockClient, CreateInstance::class, Method::POST, '/environments/env-01k7env000000000000000001/instances', [
         'name' => 'queue',
         'type' => 'managed_queue',
         'size' => 'mq.pro.32gb',
-        'scaling_type' => 'auto',
+        'scaling_type' => 'custom',
         'visibility_timeout' => null,
         'shutdown_timeout' => null,
     ]);
