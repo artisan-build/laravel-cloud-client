@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use ArtisanBuild\LaravelCloudClient\Enums\CacheSize;
+use ArtisanBuild\LaravelCloudClient\Enums\CacheStatus;
 use ArtisanBuild\LaravelCloudClient\Enums\CacheType;
+use ArtisanBuild\LaravelCloudClient\Enums\DatabaseStatus;
 use ArtisanBuild\LaravelCloudClient\Enums\DatabaseType;
+use ArtisanBuild\LaravelCloudClient\Enums\FilesystemStatus;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceScalingType;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceSize;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceType;
@@ -125,4 +128,70 @@ it('partitions every cache size across the cache types exactly once', function (
         ->and(CacheType::LaravelValkey->sizes())->not->toBeEmpty()
         ->and(CacheType::AwsElastiCacheRedis->sizes())
         ->toBe(CacheType::AwsElastiCacheValkey->sizes());
+});
+
+/*
+ * The three RESOURCE LIFECYCLES, which exist because Cloud builds a database
+ * cluster, a cache and a bucket asynchronously and refuses to attach one that
+ * is still `creating`. A caller waits on `isSettling()` and stops on anything
+ * else, so a status the API has invented and this package has not modelled is
+ * read as "unrecognised" at the seam and fails the run — loudly, but a run
+ * nonetheless. These keep the vocabulary honest before it costs anyone that.
+ */
+
+it('has database statuses matching the bundled api spec', function (): void {
+    expect(array_column(DatabaseStatus::cases(), 'value'))
+        ->toEqualCanonicalizing(apiSpecEnum('DatabaseStatus'));
+});
+
+it('has cache statuses matching the bundled api spec', function (): void {
+    expect(array_column(CacheStatus::cases(), 'value'))
+        ->toEqualCanonicalizing(apiSpecEnum('CacheStatus'));
+});
+
+it('has object storage statuses matching the bundled api spec', function (): void {
+    expect(array_column(FilesystemStatus::cases(), 'value'))
+        ->toEqualCanonicalizing(apiSpecEnum('FilesystemStatus'));
+});
+
+it('treats exactly one status per resource as attachable', function (): void {
+    // `available` and nothing else. The spec models plenty of states that
+    // sound benign — `stopped`, `disabled`, `updating` — and attaching against
+    // any of them is a guess about somebody's paid infrastructure.
+    $ready = fn (array $cases): array => array_column(
+        array_values(array_filter($cases, fn ($case): bool => $case->isReady())),
+        'value',
+    );
+
+    expect($ready(DatabaseStatus::cases()))->toBe(['available'])
+        ->and($ready(CacheStatus::cases()))->toBe(['available'])
+        ->and($ready(FilesystemStatus::cases()))->toBe(['available']);
+});
+
+it('never counts a status as both ready and still settling', function (): void {
+    // The two predicates drive a wait: ready ends it, settling continues it,
+    // and neither ends the run with a failure. A state answering yes to both
+    // would make the wait's outcome depend on the order they are asked in.
+    foreach ([...DatabaseStatus::cases(), ...CacheStatus::cases(), ...FilesystemStatus::cases()] as $status) {
+        expect($status->isReady() && $status->isSettling())->toBeFalse($status::class.'::'.$status->name);
+    }
+});
+
+it('waits on every state a resource can leave on its own, and on nothing else', function (): void {
+    // Written out rather than derived, because the interesting content is the
+    // JUDGEMENT about each state and a derivation would just restate the enum.
+    // `unknown` waits: it is Cloud declining to answer about a resource created
+    // seconds ago, and the wait is bounded. Archiving does NOT — a cluster on
+    // its way to `archived` is not on its way to `available`.
+    $settling = fn (array $cases): array => array_column(
+        array_values(array_filter($cases, fn ($case): bool => $case->isSettling())),
+        'value',
+    );
+
+    expect($settling(DatabaseStatus::cases()))
+        ->toEqualCanonicalizing(['creating', 'updating', 'restarting', 'upgrading', 'moving', 'restoring', 'unknown'])
+        ->and($settling(CacheStatus::cases()))
+        ->toEqualCanonicalizing(['creating', 'updating', 'unknown'])
+        ->and($settling(FilesystemStatus::cases()))
+        ->toEqualCanonicalizing(['creating', 'updating', 'unknown']);
 });
