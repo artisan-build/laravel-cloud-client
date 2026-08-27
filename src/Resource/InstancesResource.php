@@ -20,6 +20,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\Instances\ListInstanceSizes;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\RestartInstance;
 use ArtisanBuild\LaravelCloudClient\Requests\Instances\UpdateInstance;
 use ArtisanBuild\LaravelCloudClient\Resource;
+use ArtisanBuild\LaravelCloudClient\Support\BackgroundProcess;
 use Saloon\Http\Response;
 
 /**
@@ -44,6 +45,8 @@ final class InstancesResource extends Resource
     /**
      * Create a new instance (scale up).
      *
+     * @param  list<BackgroundProcess>  $backgroundProcesses  the workers the instance runs; empty omits the key
+     *
      * @throws ApiException
      * @throws AuthenticationException
      * @throws NotFoundException
@@ -65,6 +68,12 @@ final class InstancesResource extends Resource
         ?int $shutdownTimeout,
         ?int $maxReplicas = null,
         ?bool $usesScheduler = null,
+        // BackgroundProcess objects rather than an array of arrays, so the
+        // rules that only exist in the schema's prose — no `command` on a
+        // worker, `processes` within 1-10 — are enforced here instead of
+        // arriving as a 422 against a resource the customer is already paying
+        // for. Cloud REQUIRES an entry on a managed queue.
+        array $backgroundProcesses = [],
     ): Response {
         return $this->send(new CreateInstance(
             environmentId: $environmentId,
@@ -77,6 +86,7 @@ final class InstancesResource extends Resource
             shutdownTimeout: $shutdownTimeout,
             maxReplicas: $maxReplicas,
             usesScheduler: $usesScheduler,
+            backgroundProcesses: array_values($backgroundProcesses),
         ));
     }
 

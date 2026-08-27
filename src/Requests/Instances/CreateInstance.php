@@ -7,6 +7,7 @@ namespace ArtisanBuild\LaravelCloudClient\Requests\Instances;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceScalingType;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceSize;
 use ArtisanBuild\LaravelCloudClient\Enums\InstanceType;
+use ArtisanBuild\LaravelCloudClient\Support\BackgroundProcess;
 use ArtisanBuild\LaravelCloudClient\Support\Path;
 use ArtisanBuild\LaravelCloudClient\Support\Value;
 use Saloon\Contracts\Body\HasBody;
@@ -44,6 +45,18 @@ final class CreateInstance extends Request implements HasBody
         protected ?int $maxReplicas = null,
         // See UpdateInstance: the scheduler is a flag on the instance.
         protected ?bool $usesScheduler = null,
+        /**
+         * The workers this instance runs. EMPTY OMITS THE KEY — see
+         * defaultBody().
+         *
+         * A managed queue is not optional here: Cloud requires an entry and
+         * names `background_processes.0.type` / `.0.processes` in the 422 when
+         * it gets none. The typed shape is what keeps `command` off a
+         * `worker` and `processes` inside 1-10; see BackgroundProcess.
+         *
+         * @var list<BackgroundProcess>
+         */
+        protected array $backgroundProcesses = [],
     ) {}
 
     public function resolveEndpoint(): string
@@ -81,6 +94,19 @@ final class CreateInstance extends Request implements HasBody
 
         if ($this->usesScheduler !== null) {
             $body['uses_scheduler'] = $this->usesScheduler;
+        }
+
+        // Omitted entirely when there are none, exactly as `max_replicas` and
+        // `min_replicas` are above. An empty array is NOT the same statement:
+        // the schema types this as an array of objects whose items each
+        // require `type` and `processes`, so `[]` and `null` are both things
+        // Cloud gets to have an opinion about, and an instance that declares
+        // no workers should say nothing rather than say "none".
+        if ($this->backgroundProcesses !== []) {
+            $body['background_processes'] = array_map(
+                static fn (BackgroundProcess $process): array => $process->toArray(),
+                $this->backgroundProcesses,
+            );
         }
 
         return $body;
