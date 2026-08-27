@@ -279,24 +279,29 @@ it('sends a live database type and instance size the bundled enums do not model'
 
     $client = cloudClientWithMock($mockClient);
 
-    // `min_replicas` is passed as NULL and must not reach the body. This
-    // fixture used to pass 0 and assert `'min_replicas' => 0`, which is exactly
-    // the body Cloud rejects — the schema says the field is "not applicable to
-    // managed queues". A fixture agreeing with the code and disagreeing with
-    // the spec is what let this ship.
+    // NULL OMITS THE KEY — for BOTH replica bounds, and this is the fixture
+    // that keeps that capability alive.
     //
-    // And `custom`, not `auto`. `auto` is in InstanceScalingType and Cloud
-    // refuses it for a managed queue; `custom` is what a live production
-    // managed queue reports. This fixture asserted the refused body for three
-    // releases, which is the same failure one paragraph up in a different
-    // field.
-    $client->instances()->create('env-01k7env000000000000000001', 'queue', InstanceType::ManagedQueue, 'mq.pro.32gb', InstanceScalingType::Custom, null, null, null);
+    // An `auto` instance is the case that needs it: the schema says of both
+    // fields that they are "only applicable to the `custom` scaling type, and
+    // rejected when used with `auto`", so a body carrying either one here is
+    // a body Cloud refuses. There is no value to send, only an absence, and
+    // an absence is not something a non-nullable `int` parameter could have
+    // expressed.
+    //
+    // A `service` instance, not a managed queue. The managed-queue body is
+    // asserted whole — bounds included — in the application's own
+    // SdkRequestShapeTest; it sends `custom` with `min_replicas: 0` and
+    // `max_replicas: 25`, copied off a live production queue. This fixture
+    // deliberately covers the OTHER half of the same parameter: the caller
+    // who has nothing to send.
+    $client->instances()->create('env-01k7env000000000000000001', 'web', InstanceType::Service, 'flex-512mb', InstanceScalingType::Auto, null, null, null);
 
     $this->assertSentRequest($mockClient, CreateInstance::class, Method::POST, '/environments/env-01k7env000000000000000001/instances', [
-        'name' => 'queue',
-        'type' => 'managed_queue',
-        'size' => 'mq.pro.32gb',
-        'scaling_type' => 'custom',
+        'name' => 'web',
+        'type' => 'service',
+        'size' => 'flex-512mb',
+        'scaling_type' => 'auto',
         'visibility_timeout' => null,
         'shutdown_timeout' => null,
     ]);
