@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ArtisanBuild\LaravelCloudClient\Providers;
 
 use ArtisanBuild\LaravelCloudClient\Console\Commands\ApplicationsListCommand;
+use ArtisanBuild\LaravelCloudClient\Console\Commands\CheckApiSpecCommand;
 use ArtisanBuild\LaravelCloudClient\Console\Commands\DeployCommand;
 use ArtisanBuild\LaravelCloudClient\Console\Commands\DeploymentLogsCommand;
 use ArtisanBuild\LaravelCloudClient\Console\Commands\DeploymentStatusCommand;
@@ -54,6 +55,7 @@ final class LaravelCloudServiceProvider extends ServiceProvider
                 DeploymentStatusCommand::class,
                 DeploymentLogsCommand::class,
                 RefreshApiSpecCommand::class,
+                CheckApiSpecCommand::class,
             ]);
         }
     }

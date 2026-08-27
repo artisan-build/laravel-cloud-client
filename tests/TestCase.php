@@ -7,6 +7,7 @@ namespace ArtisanBuild\LaravelCloudClient\Tests;
 use ArtisanBuild\LaravelCloudClient\LaravelCloudClient;
 use ArtisanBuild\LaravelCloudClient\Providers\LaravelCloudServiceProvider;
 use ArtisanBuild\LaravelCloudClient\Tests\Support\LiveCallAttempted;
+use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Saloon\Enums\Method;
 use Saloon\Http\Faking\MockClient;
@@ -43,7 +44,7 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      */
     protected function defineEnvironment($app): void
     {

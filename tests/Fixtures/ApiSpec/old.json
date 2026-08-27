@@ -1,0 +1,83 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Fabricated Cloud API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/databases/clusters": {
+            "get": {
+                "description": "Get a list of all database clusters. The `schemas` relationship is deprecated.",
+                "parameters": [
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": ["schemas", "databases"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "filter[region]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/instances/{instance}/failed-jobs/{jobId}": {
+            "delete": {
+                "responses": {
+                    "204": {
+                        "description": "The failed job was deleted."
+                    },
+                    "404": {
+                        "description": "Not found."
+                    }
+                }
+            }
+        },
+        "/retired-endpoint": {
+            "get": {
+                "description": "Something upstream is about to delete."
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DatabaseResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "relationships": {
+                        "type": "object",
+                        "properties": {
+                            "schemas": {
+                                "type": "object",
+                                "description": "TODO: Remove the schemas relationship by March 2026."
+                            },
+                            "databases": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            },
+            "RetiredResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

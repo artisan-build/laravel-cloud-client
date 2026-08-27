@@ -21,6 +21,7 @@ use ArtisanBuild\LaravelCloudClient\Resource\InstancesResource;
 use ArtisanBuild\LaravelCloudClient\Resource\MetaResource;
 use ArtisanBuild\LaravelCloudClient\Resource\ObjectStorageResource;
 use Saloon\Http\Connector;
+use Saloon\Http\Request;
 use Saloon\Http\Response;
 use Saloon\Traits\Plugins\AcceptsJson;
 use SensitiveParameter;
@@ -129,7 +130,7 @@ final class LaravelCloudClient extends Connector
      * @throws RateLimitException
      * @throws ValidationException
      */
-    public function sendWithRetry(\Saloon\Http\Request $request): Response
+    public function sendWithRetry(Request $request): Response
     {
         $attempts = 0;
 

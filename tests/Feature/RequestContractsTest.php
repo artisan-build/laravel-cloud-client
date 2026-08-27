@@ -78,6 +78,7 @@ use ArtisanBuild\LaravelCloudClient\Requests\ObjectStorage\GetBucket;
 use ArtisanBuild\LaravelCloudClient\Requests\ObjectStorage\ListBucketAccessKeys;
 use ArtisanBuild\LaravelCloudClient\Requests\ObjectStorage\ListBuckets;
 use ArtisanBuild\LaravelCloudClient\Requests\ObjectStorage\UpdateBucket;
+use ArtisanBuild\LaravelCloudClient\Tests\TestCase;
 use Saloon\Enums\Method;
 use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
@@ -106,7 +107,7 @@ function specVerifiedRequestEndpointsAndMethods(): array
     $deploymentId = 'dep-01k7dep000000000000000001';
     $domainId = 'dom-01k7dom000000000000000001';
     $bucketId = 'bucket-01k7bucket0000000000001';
-    $bodyNotChecked = ArtisanBuild\LaravelCloudClient\Tests\TestCase::BODY_NOT_CHECKED;
+    $bodyNotChecked = TestCase::BODY_NOT_CHECKED;
 
     return [
         'applications list endpoint is spec-verified' => [fn (LaravelCloudClient $client): Response => $client->applications()->list(), ListApplications::class, Method::GET, '/applications', null],
@@ -210,7 +211,7 @@ function currentRequestShapesNotYetSpecVerified(): array
     ];
 }
 
-it('sends spec-verified request endpoints, methods, and checked bodies', function (Closure $send, string $requestClass, Method $method, string $endpoint, array|string|null $body = ArtisanBuild\LaravelCloudClient\Tests\TestCase::BODY_NOT_CHECKED): void {
+it('sends spec-verified request endpoints, methods, and checked bodies', function (Closure $send, string $requestClass, Method $method, string $endpoint, array|string|null $body = TestCase::BODY_NOT_CHECKED): void {
     $mockClient = new MockClient([
         MockResponse::make(body: json_encode(['data' => []]), status: 200),
     ]);
@@ -220,7 +221,7 @@ it('sends spec-verified request endpoints, methods, and checked bodies', functio
     $this->assertSentRequest($mockClient, $requestClass, $method, $endpoint, $body);
 })->with(specVerifiedRequestEndpointsAndMethods());
 
-it('pins current SDK request shapes that are NOT yet spec-verified and must not be treated as API conformance', function (Closure $send, string $requestClass, Method $method, string $endpoint, array|string|null $body = ArtisanBuild\LaravelCloudClient\Tests\TestCase::BODY_NOT_CHECKED): void {
+it('pins current SDK request shapes that are NOT yet spec-verified and must not be treated as API conformance', function (Closure $send, string $requestClass, Method $method, string $endpoint, array|string|null $body = TestCase::BODY_NOT_CHECKED): void {
     $mockClient = new MockClient([
         MockResponse::make(body: json_encode(['data' => []]), status: 200),
     ]);

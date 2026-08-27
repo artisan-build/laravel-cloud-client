@@ -1,0 +1,84 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Fabricated Cloud API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/databases/clusters": {
+            "get": {
+                "description": "Get a list of all database clusters.",
+                "parameters": [
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "databases"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "filter[region]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
+        "/instances/{instance}/failed-jobs/{jobId}": {
+            "delete": {
+                "responses": {
+                    "404": {
+                        "description": "Not found."
+                    },
+                    "202": {
+                        "description": "The failed job will be deleted in the background."
+                    }
+                }
+            }
+        },
+        "/secrets": {
+            "get": {
+                "description": "List secrets."
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DatabaseResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "relationships": {
+                        "type": "object",
+                        "properties": {
+                            "databases": {
+                                "type": "object"
+                            },
+                            "secrets": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            },
+            "SecretResource": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
