@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use ArtisanBuild\LaravelCloudClient\Support\Path;
-use InvalidArgumentException;
 
 it('encodes safe opaque path segments', function (): void {
     expect(Path::make('applications', 'app-01k7app000000000000000001'))->toBe('/applications/app-01k7app000000000000000001');
