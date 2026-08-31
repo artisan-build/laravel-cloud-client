@@ -170,3 +170,23 @@ it('treats a document with no paths or schemas as wholly removed rather than as 
         ->toContain('path /retired-endpoint')
         ->toContain('schema RetiredResource');
 });
+
+it('caps findings at the runaway guard and flags the report as truncated', function (): void {
+    // A runaway drift (hundreds of removed paths) must render as a bounded
+    // report that SAYS it was truncated — not as a silently complete-looking
+    // list, which is exactly the trusted-but-wrong shape the stale vendored
+    // spec shipped with. The guard had no direct test before this.
+    $paths = [];
+
+    foreach (range(1, 250) as $index) {
+        $paths['/removed-'.$index] = [
+            'get' => ['responses' => ['200' => ['description' => 'ok']]],
+        ];
+    }
+
+    $drift = ApiSpecDrift::between(['paths' => $paths], ['paths' => new stdClass]);
+
+    expect($drift->truncated())->toBeTrue()
+        ->and(count($drift->findings()))->toBeLessThanOrEqual(200)
+        ->and(count($drift->findings()))->toBeGreaterThan(0);
+});

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use ArtisanBuild\LaravelCloudClient\Support\ApiSpecDrift;
+
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -115,8 +117,22 @@ it('emits machine-readable findings with --json', function (): void {
     /** @var array<string, mixed> $decoded */
     $decoded = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 
+    // The machine-readable report must carry EVERY finding with its severity
+    // and location intact — the human report's readers rely on the JSON when
+    // scripting against it, and a report silently missing all but the first
+    // finding reads as complete. Cross-checked against the support class so
+    // the expected count is computed, not pinned.
+    $expected = ApiSpecDrift::between(
+        json_decode((string) file_get_contents(vendoredSpecPath()), true, 512, JSON_THROW_ON_ERROR),
+        json_decode((string) file_get_contents(driftFixturePath('old')), true, 512, JSON_THROW_ON_ERROR),
+    )->findings();
+
     expect($status)->toBe(1)
         ->and($decoded['drifted'])->toBeTrue()
-        ->and($decoded['findings'][0]['severity'])->toBe('removal')
-        ->and($decoded['findings'][0]['location'])->toStartWith('path ');
+        ->and($decoded['findings'])->toHaveCount(count($expected));
+
+    foreach ($expected as $index => $finding) {
+        expect($decoded['findings'][$index]['severity'])->toBe($finding->severity->value)
+            ->and($decoded['findings'][$index]['location'])->toBe($finding->location);
+    }
 });
