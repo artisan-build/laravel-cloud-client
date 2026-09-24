@@ -48,7 +48,6 @@
         }
     },
     "scripts": {
-        "refresh-api-spec": "@php ../../artisan cloud:api-spec:refresh",
         "test": "pest",
         "analyse": "phpstan analyse",
         "format": "pint",
